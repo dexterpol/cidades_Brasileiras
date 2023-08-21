@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
+    
     const estadoSelect = document.getElementById("estado-select");
     const listaCidades = document.getElementById("lista-cidades");
     const regiaoEstado = document.getElementById("regiao-estado");
+    const letraSelect = document.getElementById("letra-select"); // Novo elemento
 
     const estados = [
         { sigla: "AC", nome: "Acre" },
@@ -46,6 +48,11 @@ document.addEventListener("DOMContentLoaded", function () {
         buscarRegiao(estadoSelecionado);
     });
 
+    letraSelect.addEventListener("change", () => {
+        const letraSelecionada = letraSelect.value;
+        filtrarCidadesPorLetra(letraSelecionada);
+    });
+
     function buscarCidades(estado) {
         const apiUrl = `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estado}/municipios`;
 
@@ -76,5 +83,17 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch((error) => {
                 console.error("Erro ao buscar informações da região:", error);
             });
+    }
+
+    function filtrarCidadesPorLetra(letra) {
+        const cidades = document.querySelectorAll("#lista-cidades li");
+        listaCidades.innerHTML = "";
+
+        cidades.forEach((cidade) => {
+            const nomeCidade = cidade.textContent;
+            if (nomeCidade.startsWith(letra)) {
+                listaCidades.appendChild(cidade);
+            }
+        });
     }
 });
