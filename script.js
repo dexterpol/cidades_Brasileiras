@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const estadoSelect = document.getElementById("estado-select");
     const listaCidades = document.getElementById("lista-cidades");
+    const regiaoEstado = document.getElementById("regiao-estado");
 
     const estados = [
         { sigla: "AC", nome: "Acre" },
@@ -42,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
     estadoSelect.addEventListener("change", () => {
         const estadoSelecionado = estadoSelect.value;
         buscarCidades(estadoSelecionado);
+        buscarRegiao(estadoSelecionado);
     });
 
     function buscarCidades(estado) {
@@ -59,6 +61,20 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .catch((error) => {
                 console.error("Erro ao buscar cidades:", error);
+            });
+    }
+
+    function buscarRegiao(estado) {
+        const apiUrl = `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estado}`;
+
+        fetch(apiUrl)
+            .then((response) => response.json())
+            .then((data) => {
+                const regiao = data.regiao && data.regiao.nome ? data.regiao.nome : "Região desconhecida";
+                regiaoEstado.textContent = `Região do Estado: ${regiao}`;
+            })
+            .catch((error) => {
+                console.error("Erro ao buscar informações da região:", error);
             });
     }
 });
